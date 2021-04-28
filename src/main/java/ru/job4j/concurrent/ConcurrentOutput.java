@@ -1,7 +1,7 @@
 package ru.job4j.concurrent;
 
 public class ConcurrentOutput {
-    public void threadTest() {
+    public static void main(String[] args) {
         Thread another = new Thread(() -> System.out.println(Thread.currentThread().getName()));
         Thread second = new Thread(() -> System.out.println(Thread.currentThread().getName()));
         System.out.println(Thread.currentThread().getName());
