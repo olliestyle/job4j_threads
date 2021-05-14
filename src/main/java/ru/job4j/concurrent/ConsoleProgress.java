@@ -4,24 +4,11 @@ public class ConsoleProgress implements Runnable {
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
+            String[] symbols = {"\\", "|", "/"};
             try {
-                String symbol = "\\";
                 for (int i = 0; i < 100; i++) {
                     Thread.sleep(500);
-                    switch (symbol) {
-                        case ("\\"):
-                            System.out.print("\rLoading : " + i + "% " + symbol);
-                            symbol = "|";
-                            break;
-                        case ("|"):
-                            System.out.print("\rLoading : " + i + "% " + symbol);
-                            symbol = "/";
-                            break;
-                        default:
-                            System.out.print("\rLoading : " + i + "% " + symbol);
-                            symbol = "\\";
-                            break;
-                    }
+                    System.out.print("\rLoading : " + i + "% " + symbols[i % 3]);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
