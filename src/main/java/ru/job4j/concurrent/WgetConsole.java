@@ -47,7 +47,7 @@ public class WgetConsole implements Runnable {
             String url = args[0];
             String fileName = args[1];
             int speed = Integer.parseInt(args[2]);
-            Thread wget = new Thread(new WgetConsole(url, fileName,speed));
+            Thread wget = new Thread(new WgetConsole(url, fileName, speed));
             wget.start();
             wget.join();
         } else {
