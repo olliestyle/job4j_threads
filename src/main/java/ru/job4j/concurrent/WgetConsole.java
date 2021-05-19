@@ -9,16 +9,18 @@ public class WgetConsole implements Runnable {
 
     private final String url;
     private final int speed;
+    private final String fileName;
 
-    public WgetConsole(String url, int speed) {
+    public WgetConsole(String url, String fileName, int speed) {
         this.url = url;
+        this.fileName = fileName;
         this.speed = speed;
     }
 
     @Override
     public void run() {
         try (BufferedInputStream bis = new BufferedInputStream(new URL(url).openStream());
-             FileOutputStream fos = new FileOutputStream("download.xml")) {
+             FileOutputStream fos = new FileOutputStream(fileName)) {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
             int i = 0;
@@ -41,10 +43,15 @@ public class WgetConsole implements Runnable {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        String url = args[0];
-        int speed = Integer.parseInt(args[1]);
-        Thread wget = new Thread(new WgetConsole(url, speed));
-        wget.start();
-        wget.join();
+        if (args.length == 3) {
+            String url = args[0];
+            String fileName = args[1];
+            int speed = Integer.parseInt(args[2]);
+            Thread wget = new Thread(new WgetConsole(url, fileName,speed));
+            wget.start();
+            wget.join();
+        } else {
+            System.out.println("Please, enter correct arguments: url, fileName, speed");
+        }
     }
 }
