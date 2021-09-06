@@ -37,12 +37,7 @@ public class UserStorage {
     }
 
     private SimpleUser getUserById(int id) {
-        for (Integer userId: store.keySet()) {
-            if (userId == id) {
-                return store.get(userId);
-            }
-        }
-        return null;
+        return store.get(id);
     }
 
     public synchronized void transfer(int fromId, int toId, int amount) {
