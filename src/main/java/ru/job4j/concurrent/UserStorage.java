@@ -3,30 +3,43 @@ package ru.job4j.concurrent;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 @ThreadSafe
 public class UserStorage {
     @GuardedBy("this")
-    private final List<SimpleUser> store = new ArrayList<>();
+    private final Map<Integer, SimpleUser> store = new HashMap<>();
 
     public synchronized boolean add(SimpleUser user) {
-        return store.add(user);
+        boolean isAdd = false;
+        if (store.put(user.getId(), user) == null) {
+            isAdd = true;
+        }
+        return isAdd;
     }
 
-    public boolean update(SimpleUser user) {
-        return true;
+    public synchronized boolean update(SimpleUser user) {
+        boolean isUpdate = false;
+        if (store.containsKey(user.getId())) {
+            store.put(user.getId(), user);
+            isUpdate = true;
+        }
+        return isUpdate;
     }
 
     public synchronized boolean delete(SimpleUser user) {
-        return store.remove(user);
+        boolean isDelete = false;
+        if (store.remove(user.getId()) != null) {
+            isDelete = true;
+        }
+        return isDelete;
     }
 
     private SimpleUser getUserById(int id) {
-        for (SimpleUser user: store) {
-            if (user.getId() == id) {
-                return user;
+        for (Integer userId: store.keySet()) {
+            if (userId == id) {
+                return store.get(userId);
             }
         }
         return null;
@@ -35,11 +48,7 @@ public class UserStorage {
     public synchronized void transfer(int fromId, int toId, int amount) {
         SimpleUser fromUser = getUserById(fromId);
         SimpleUser toUser = getUserById(toId);
-        if (fromUser == null) {
-            System.out.println("User with id "  + fromId + " not found");
-        } else if (toUser == null)  {
-            System.out.println("User with id "  + toId + " not found");
-        } else {
+        if (fromUser != null && toUser != null) {
             fromUser.setAmount(fromUser.getAmount() - amount);
             toUser.setAmount(toUser.getAmount() + amount);
         }
