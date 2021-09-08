@@ -1,7 +1,7 @@
 package ru.job4j.concurrent;
 
 public class CountBarrier {
-    private final Object monitor = this;
+    private final Object monitor = this; // для наглядности
     private final int total;
     private int count = 0;
 
