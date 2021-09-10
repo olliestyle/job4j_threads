@@ -11,21 +11,27 @@ import java.util.Random;
 public class SimpleBlockingQueue<T> {
     @GuardedBy("this")
     private Queue<T> queue = new LinkedList<>();
+    private int block;
 
-    public synchronized void offer(T value) {
+    public SimpleBlockingQueue(int block) {
+        this.block = block;
+    }
+
+    public synchronized void offer(T value) throws InterruptedException {
+        while (queue.size() == block) {
+            wait();
+        }
         queue.offer(value);
         notify();
     }
 
-    public synchronized T poll() {
-        while (queue.peek() == null) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+    public synchronized T poll() throws InterruptedException {
+        while (queue.size() == 0) {
+            wait();
         }
-        return queue.poll();
+        T t = queue.poll();
+        notify();
+        return t;
     }
 
     public synchronized int size() {
@@ -43,7 +49,11 @@ class Consumer implements Runnable {
 
     @Override
     public void run() {
-        Object obj = simpleBlockingQueue.poll();
+        try {
+            simpleBlockingQueue.poll();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
 
@@ -57,6 +67,10 @@ class Producer implements Runnable {
 
     @Override
     public void run() {
-        simpleBlockingQueue.offer(new Random().nextInt(10));
+        try {
+            simpleBlockingQueue.offer(new Random().nextInt(10));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
