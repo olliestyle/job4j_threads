@@ -19,19 +19,19 @@ public class ParallelSearch {
         producer.start();
         final Thread consumer = new Thread(
                 () -> {
-                    while (true) {
+                    while (queue.size() != 0 || !Thread.currentThread().isInterrupted()) {
                         try {
-                            if (queue.size() == 0 && producer.getState() == Thread.State.TERMINATED) {
-                                return;
-                            }
                             System.out.println(queue.poll());
                         } catch (InterruptedException e) {
                             e.printStackTrace();
+                            System.out.println("inter");
                             Thread.currentThread().interrupt();
                         }
                     }
                 }
         );
         consumer.start();
+        producer.join();
+        consumer.interrupt();
     }
 }
