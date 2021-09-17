@@ -6,27 +6,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ThreadPool {
+    private int cores = Runtime.getRuntime().availableProcessors();
+    private int taskCountBlock;
     private final List<Thread> threads = new LinkedList<>();
-    private final SimpleBlockingQueue<Runnable> tasks = new SimpleBlockingQueue<>(10);
-    private int taskCount = 0;
+    private final SimpleBlockingQueue<Runnable> tasks;
 
     /**
      * Инициализируем нити по количеству ядер в системе, каждая нить
      * достает задачу из блокирующей очереди и выполняет её метод run().
      * Сразу запускаем нити в работу.
      */
-    public ThreadPool() {
-        int cores = Runtime.getRuntime().availableProcessors();
+    public ThreadPool(int taskCountBlock) {
+        tasks = new SimpleBlockingQueue<>(taskCountBlock);
         for (int i = 0; i < cores; i++) {
             threads.add(new Thread(() -> {
                 while (tasks.size() != 0 || !Thread.currentThread().isInterrupted()) {
                     try {
                         System.out.println(Thread.currentThread().getName());
                         tasks.poll().run();
-                        System.out.println("taskCount" + taskCount++);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
-                        System.out.println(Thread.currentThread().getName() + "в интерапте");
                         Thread.currentThread().interrupt();
                     }
                 }
@@ -60,7 +59,7 @@ public class ThreadPool {
      * tasks != 0.
      */
     public static void main(String[] args) {
-        ThreadPool pool = new ThreadPool();
+        ThreadPool pool = new ThreadPool(10);
         for (int i = 0; i < 10000; i++) {
             try {
                 pool.work(new Runnable() {
