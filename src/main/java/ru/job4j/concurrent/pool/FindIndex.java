@@ -7,7 +7,7 @@ public class FindIndex<T> extends RecursiveAction {
 
     private final T[] array;
     private final T toFind;
-    private int index;
+    public static int index;
     private int from;
     private int to;
 
@@ -36,14 +36,11 @@ public class FindIndex<T> extends RecursiveAction {
         rightSearch.fork();
         leftSearch.join();
         rightSearch.join();
-        System.out.println(leftSearch.index);
-        System.out.println(rightSearch.index);
     }
 
     public int findIndex() {
-        FindIndex<T> fi = new FindIndex<>(array, toFind, 0, array.length);
-        ForkJoinPool.commonPool().invoke(fi);
-        return fi.index;
+        ForkJoinPool.commonPool().invoke(new FindIndex<>(array, toFind, 0, array.length));
+        return index;
     }
 
     public static void main(String[] args) {
