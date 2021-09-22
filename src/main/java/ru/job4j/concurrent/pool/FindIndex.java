@@ -1,15 +1,14 @@
 package ru.job4j.concurrent.pool;
 
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.RecursiveTask;
 
-public class FindIndex<T> extends RecursiveAction {
+public class FindIndex<T> extends RecursiveTask<Integer> {
 
     private final T[] array;
     private final T toFind;
-    public static int index;
-    private int from;
-    private int to;
+    private final int from;
+    private final int to;
 
     public FindIndex(T[] array, T toFind, int fromIndex, int toIndex) {
         this.array = array;
@@ -19,41 +18,31 @@ public class FindIndex<T> extends RecursiveAction {
     }
 
     @Override
-    protected void compute() {
+    protected Integer compute() {
         if (to - from < 10) {
-            for (int i = 0; i < array.length; i++) {
+            int index = -1;
+            for (int i = from; i <= to; i++) {
+                System.out.println(i);
                 if (array[i].equals(toFind)) {
                     index = i;
                     break;
                 }
             }
-            return;
+            return index;
         }
         int mid = (to + from) / 2;
         FindIndex<T> leftSearch = new FindIndex<>(array, toFind, from, mid);
         FindIndex<T> rightSearch = new FindIndex<>(array, toFind, mid + 1, to);
         leftSearch.fork();
         rightSearch.fork();
-        leftSearch.join();
-        rightSearch.join();
+        return choice(leftSearch.join(), rightSearch.join());
     }
 
-    public int findIndex() {
-        ForkJoinPool.commonPool().invoke(new FindIndex<>(array, toFind, 0, array.length));
-        return index;
+    private Integer choice(Integer left, Integer right) {
+        return left != -1 ? left : right;
     }
 
-    public static void main(String[] args) {
-        String[] strings = {"aaa", "bbb", "ccc"};
-        FindIndex<String> stringFindIndex = new FindIndex<>(strings, "bbb", 0, strings.length);
-        int index = stringFindIndex.findIndex();
-        System.out.println(index);
-        String[] stringsBig = {"aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg", "hhh", "iii",
-                               "jjj", "kkk", "lll", "mmm", "nnn", "ooo", "ppp", "qqq", "rrr",
-                               "sss", "ttt", "uuu", "vvv", "www", "xxx", "yyy", "zzz", "111",
-                               "222", "333", "444", "555", "666", "777", "888", "999"};
-        stringFindIndex = new FindIndex<>(stringsBig, "999", 0, stringsBig.length);
-        index = stringFindIndex.findIndex();
-        System.out.println(index);
+    public Integer findIndex() {
+        return ForkJoinPool.commonPool().invoke(this);
     }
 }
