@@ -1,13 +1,12 @@
 package ru.job4j.concurrent;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 
 public class FileDownload {
     public static void main(String[] args) throws Exception {
-        String file = "https://raw.githubusercontent.com/peterarsentev/course_test/master/pom.xml";
+        BufferedReader br = new BufferedReader(new FileReader("fileDownload.txt"));
+        String file = br.readLine();
         try (BufferedInputStream in = new BufferedInputStream(new URL(file).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream("pom_tmp.xml")) {
             byte[] dataBuffer = new byte[1024];

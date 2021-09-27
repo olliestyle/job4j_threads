@@ -1,0 +1,1 @@
+https://raw.githubusercontent.com/peterarsentev/course_test/master/pom.xml
