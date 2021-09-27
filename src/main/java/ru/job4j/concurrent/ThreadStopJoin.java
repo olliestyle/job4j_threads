@@ -2,10 +2,10 @@ package ru.job4j.concurrent;
 
 public class ThreadStopJoin {
     /**
-     * // Эта схема является шаблоном.
-     * // Если используются методы sleep, join или wait, то нужно в блоке catch вызвать прерывание.
-     * // Thread (in this case - main thread), in which we call join() method on another thread will wait for its completion
-     * // Main thread wait until thread will complete its run() method
+     * Эта схема является шаблоном.
+     * Если используются методы sleep, join или wait, то нужно в блоке catch вызвать прерывание.
+     * Thread (in this case - main thread), in which we call join() method on another thread will wait for its completion
+     * Main thread wait until thread will complete its run() method
      * @param args
      * @throws InterruptedException
      */
