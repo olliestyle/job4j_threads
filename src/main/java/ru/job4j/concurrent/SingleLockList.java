@@ -7,6 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * // Берем итератор от списка, который скопировали на момент создания итератора.
+ * @param <T>
+ */
 @ThreadSafe
 public class SingleLockList<T> implements Iterable<T> {
     @GuardedBy("this")
@@ -24,7 +28,7 @@ public class SingleLockList<T> implements Iterable<T> {
         return list.get(index);
     }
 
-    // Берем итератор от списка, который скопировали на момент создания итератора.
+
     @Override
     public synchronized Iterator<T> iterator() {
         return copy(this.list).iterator();

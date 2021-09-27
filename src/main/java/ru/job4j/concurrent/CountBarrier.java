@@ -13,7 +13,6 @@ public class CountBarrier {
         synchronized (monitor) {
             count++;
             System.out.println("In Thread " + Thread.currentThread().getName() + " count = " + count);
-            // оповещаем все нити, которые работают с текущим объектом монитором, об изменении состояния объекта
             monitor.notifyAll();
         }
     }

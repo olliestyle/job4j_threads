@@ -3,7 +3,7 @@ package ru.job4j.concurrent;
 public class Transaction extends Thread {
 
     private final Account account;
-    private int withDraw; // снимать, выводить
+    private int withDraw;
 
     public Transaction(Account account, int withDraw) {
         this.account = account;

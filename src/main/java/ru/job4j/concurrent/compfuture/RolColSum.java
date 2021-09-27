@@ -75,11 +75,9 @@ public class RolColSum {
 
     public static CompletableFuture<Void> runTask(int[][] matrix, Sums[] res, int colRow) {
         return CompletableFuture.runAsync(() -> {
-            // по строке
             for (int i = 0; i < matrix.length; i++) {
                 res[colRow].rowSum += matrix[colRow][i];
             }
-            // по столбцу
             for (int i = 0; i < matrix.length; i++) {
                 res[colRow].colSum += matrix[i][colRow];
             }
