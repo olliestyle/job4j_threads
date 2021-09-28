@@ -1,12 +1,7 @@
 package ru.job4j.concurrent.compfuture;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-
-import static org.junit.Assert.assertEquals;
 
 public class RolColSum {
     public static class Sums {
