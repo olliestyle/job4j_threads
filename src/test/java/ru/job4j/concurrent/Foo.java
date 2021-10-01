@@ -6,5 +6,7 @@ public class Foo {
         System.out.println("hello");
         System.out.println("soft");
         System.out.println("reset");
+        System.out.println("dont stash");
+        System.out.println("dont stash");
     }
 }
